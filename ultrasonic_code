@@ -1,0 +1,41 @@
+// Define pin numbers based on our wiring
+const int trigPin = 8;
+const int echoPin = 4;
+
+// Variables to store the travel time and calculated distance
+long duration;
+int distance;
+
+void setup() {
+  pinMode(trigPin, OUTPUT); // The trigger pin sends the sound wave out
+  pinMode(echoPin, INPUT);  // The echo pin listens for the wave to bounce back
+  
+  // This starts communication with your computer so we can display the text
+  Serial.begin(9600);       
+}
+
+void loop() {
+  // 1. Clear the trigger pin to ensure a clean pulse
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  // 2. Send a 10-microsecond high pulse to trigger the sensor
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // 3. Measure how long the echo pin stays HIGH (the travel time)
+  duration = pulseIn(echoPin, HIGH);
+
+  // 4. Calculate the distance 
+  // Speed of sound is ~0.034 cm/µs. Divide by 2 because the wave travels there AND back.
+  distance = duration * 0.034 / 2;
+
+  // 5. Display the result in the Arduino IDE
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  
+  // Wait half a second before taking the next measurement
+  delay(500); 
+}
